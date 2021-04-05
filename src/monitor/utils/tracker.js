@@ -16,9 +16,7 @@ class SendTracker {
 		this.xhr = new XMLHttpRequest();
 	}
 	send(data = {}) {
-		console.log(`data`, data);
 		const log = { ...getExtraData(), ...data };
-		console.log(`log`, log);
 		for (const key in log) {
 			if (Object.hasOwnProperty.call(log, key)) {
 				typeof log[key] === 'number' && (log[key] = `${log[key]}`);
@@ -28,7 +26,6 @@ class SendTracker {
 			__logs__: [log],
 		});
 		this.xhr.open('POST', this.url, true);
-		// this.xhr.setRequestHeader('x-log-compresstype', 'application/json');
 		this.xhr.setRequestHeader('x-log-apiversion', '0.6.0');
 		this.xhr.setRequestHeader('x-log-bodyrawsize', body.length);
 		this.xhr.onload = () => {};

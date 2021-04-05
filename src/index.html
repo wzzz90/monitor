@@ -16,13 +16,18 @@
 				<input
 					type="button"
 					value="点击抛出Promise错误"
-					onClick="errorOnClick()"
+					onClick="promiseErrorOnClick()"
 				/>
 			</div>
 		</div>
 		<script>
 			function errorOnClick() {
 				window.someVar.error = 'eror';
+			}
+			function promiseErrorOnClick() {
+				new Promise(function (resolve, reject) {
+					reject();
+				}).then((res) => console.log(res));
 			}
 		</script>
 	</body>

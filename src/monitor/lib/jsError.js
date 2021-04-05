@@ -13,22 +13,49 @@ export function injectJsError() {
 	console.log('injectJsError');
 	window.addEventListener('error', function (event) {
 		let lastEvent = getLastEvent(); //获取最后一个交互事件
-		console.log(`window.location`, window.location);
-		let log = {
-			// title: '', //页面标题
-			// url: window.location.href, //访问路径报错
-			// timestamp: '1788787878', //访问时间戳
-			// userAgent: 'Chrome', //用户浏览器类型
+		tracker.send({
 			kind: 'stability', //监控指标大类
 			type: 'error', //小类，这是一个错误
 			errorType: 'jsError', //错误类型，js执行错误
-			messsage: event.message, //报错信息
+			message: event.message, //报错信息
 			filename: event.filename, //访问的文件名
 			postition: `${event.lineno}:${event.colno}`, //行列信息
 			stack: getLines(event.error.stack), //堆栈信息
 			selector: lastEvent ? getSelector(lastEvent.path) : '', // 代表最后一个操作元素
-		};
-		console.log(`tracker`, tracker);
-		tracker.send(log);
+		});
+	});
+
+	window.addEventListener('unhandledrejection', (event) => {
+		console.log(`event`, event);
+		let lastEvent = getLastEvent(event);
+
+		let reason = event.reason;
+		let message = reason;
+		let line = 0;
+		let column = 0;
+		let stack = '';
+		let filename;
+		if (typeof reason === 'string') {
+			message = reason;
+		} else if (typeof reason === 'object') {
+			if (reason.stack) {
+				let matchResult = reason.stack.match(/at\s+(.+):(\d+):(\d+)/);
+				filename = matchResult[1];
+				line = matchResult[2];
+				column = matchResult[3];
+			}
+			message = reason.stack.message;
+			stack = getLines(reason.stack);
+		}
+		tracker.send({
+			kind: 'stability', //监控指标大类
+			type: 'error', //小类，这是一个错误
+			errorType: 'PromiseError', //错误类型，js执行错误
+			message, //报错信息
+			filename, //访问的文件名
+			postition: `${line}:${column}`, //行列信息
+			stack, //堆栈信息
+			selector: lastEvent ? getSelector(lastEvent.path) : '', // 代表最后一个操作元素
+		});
 	});
 }
