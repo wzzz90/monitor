@@ -1,5 +1,6 @@
 import { getLastEvent } from '../utils/getLastEvent';
 import { getSelector } from '../utils/getSelector';
+import tracker from '../utils/tracker';
 
 const getLines = (stack) => {
 	return stack
@@ -27,6 +28,7 @@ export function injectJsError() {
 			stack: getLines(event.error.stack), //堆栈信息
 			selector: lastEvent ? getSelector(lastEvent.path) : '', // 代表最后一个操作元素
 		};
-		console.log(`log`, log);
+		console.log(`tracker`, tracker);
+		tracker.send(log);
 	});
 }
