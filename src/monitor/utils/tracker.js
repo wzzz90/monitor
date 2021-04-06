@@ -17,6 +17,7 @@ class SendTracker {
 	}
 	send(data = {}) {
 		const log = { ...getExtraData(), ...data };
+		console.log(`log`, log);
 		for (const key in log) {
 			if (Object.hasOwnProperty.call(log, key)) {
 				typeof log[key] === 'number' && (log[key] = `${log[key]}`);

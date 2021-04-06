@@ -1,4 +1,5 @@
 const getSelectors = (path) => {
+	console.log(`path`, path);
 	return path
 		.reverse()
 		.filter((ele) => ele !== document && ele !== window)
@@ -15,8 +16,17 @@ const getSelectors = (path) => {
 		})
 		.join(' ');
 };
-export const getSelector = (path) => {
-	if (Array.isArray(path)) {
+export const getSelector = (pathOrTarget) => {
+	//pathOrTarget 对象或数组
+	if (Array.isArray(pathOrTarget)) {
+		return getSelectors(pathOrTarget);
+	} else {
+		let path = [];
+		while (pathOrTarget) {
+			path.push(pathOrTarget);
+			pathOrTarget = pathOrTarget.parentNode;
+		}
+		console.log(`path`, path);
 		return getSelectors(path);
 	}
 };
