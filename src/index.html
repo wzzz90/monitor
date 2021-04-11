@@ -9,19 +9,30 @@
 	<body>
 		<div id="container">
 			<div class="content">
-				<input
-					type="button"
-					value="点击抛出错误"
-					onClick="errorOnClick()"
-				/>
-				<input
-					type="button"
-					value="点击抛出Promise错误"
-					onClick="promiseErrorOnClick()"
-				/>
+				<div style="color: red">
+					<h1>stability</h1>
+					<input
+						type="button"
+						value="点击抛出错误"
+						onClick="errorOnClick()"
+					/>
+					<input
+						type="button"
+						value="点击抛出Promise错误"
+						onClick="promiseErrorOnClick()"
+					/>
 
-				<input type="button" value="ajax成功" onClick="sendSuccess()" />
-				<input type="button" value="ajax失败" onClick="sendError()" />
+					<input
+						type="button"
+						value="ajax成功"
+						onClick="sendSuccess()"
+					/>
+					<input
+						type="button"
+						value="ajax失败"
+						onClick="sendError()"
+					/>
+				</div>
 			</div>
 		</div>
 		<script>
@@ -55,7 +66,22 @@
 				};
 				xhr.send('name-wf');
 			}
+
+			setTimeout(() => {
+				const content = document.getElementsByClassName('content')[0];
+				const h1 = document.createElement('h1');
+				h1.innerHTML = 'meaning content';
+				h1.setAttribute('elementtiming', 'meaningful');
+				content.appendChild(h1);
+			}, 2000);
+
+			//dom解析完成，即便依赖的资源没有加载完成，也会触发这个事件
+			document.addEventListener('DOMContentLoaded', () => {
+				let start = Date.now();
+				while (Date.now() - start < 1000) {}
+			});
 		</script>
+
 		<!-- <script src="/222.js"></script> -->
 
 		<!-- <img src="//baidu.com/test.js" alt="图片加载中" /> -->
